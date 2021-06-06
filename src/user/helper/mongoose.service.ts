@@ -5,8 +5,6 @@ export function mongooseId(id: string) {
 }
 
 export function parseToId(result: any) {
-  console.log(result, typeof result);
-
   const res = JSON.stringify(result).replace(/_id/g, 'id');
   return JSON.parse(res);
 }

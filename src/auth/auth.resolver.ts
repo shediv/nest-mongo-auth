@@ -30,7 +30,6 @@ export class JwtAuthGuard {
     const token = auth.split(' ')[1];
     try {
       const res = jwt.verify(token, config.jwt_secret);
-      console.log("jwt.verify  ===> ", res)
 
       const result = await this.jwtService.validateUser(res, req);
       return result;
