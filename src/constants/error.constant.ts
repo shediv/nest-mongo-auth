@@ -8,6 +8,9 @@ export const ErrorConstants = {
   NO_USER_FOUND: {
     message: 'Could not find user with given email Id.',
   },
+  NO_USER_ID_FOUND: {
+    message: 'Could not find user with given Id.',
+  },
   EMAIL_ALREADY_USED: {
     message: 'Account exist with email id',
   },
@@ -22,5 +25,8 @@ export const ErrorConstants = {
   },
   TOKEN_NOT_FOUND: {
     message: 'Token Not Found',
+  },
+  DELETE_NOT_ALLOWED: {
+    message: 'Delete of this field not allowed',
   }
 };

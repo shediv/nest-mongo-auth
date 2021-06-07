@@ -85,55 +85,30 @@ export class UserController {
         }
     }
 
-    // @Get()
-    // async getTasks(
-    //     @Query(ValidationPipe) filterDto: any
-    // ) {
-    //     if(filterDto && Object.keys(filterDto).length) {
-    //         const tasks = await this.userService.getTasksWithFilters(filterDto);
-    //         return tasks;
-    //     } else {
-    //         const tasks = await this.userService.getAllTasks();
-    //         return tasks;
-    //     }       
-    // }
-
     @UseGuards(JwtAuthGuard)
+    @UsePipes(ValidationPipe)
     @Get('details/:id')
     getUserDetails(@Param('id') id:string) {
         return this.userService.getUserDetails(id);
     }
 
-    // @Patch('/:id')
-    // @UsePipes(ValidationPipe)
-    // @UseInterceptors(FileInterceptor('media',
-    //         {
-    //             storage: diskStorage({
-    //             destination: './uploads', 
-    //             filename: (req, file, cb) => {
-    //             const randomName = Array(32).fill(null).map(() => (Math.round(Math.random() * 16)).toString(16)).join('')
-    //             return cb(null, `${randomName}${extname(file.originalname)}`)
-    //             }
-    //             })
-    //         }
-    //     )
-    // )
-    // updateTask(@UploadedFile() media: Express.Multer.File, @Param('id') taskId: string, @Body() updateTaskDto: UpdateTaskDto) {
-    //     let taskUpdatedata: any = updateTaskDto;
-    //     if (taskId) {
-    //         taskUpdatedata.id = taskId;
+    @Patch('updatePassword/:id')
+    @UseGuards(JwtAuthGuard)
+    @UsePipes(ValidationPipe)
+    async updateTask(@Param('id') id: string, @Body() newPassword: any) {
+        const hashedPassword = await Hash(newPassword.passsword);
+        return this.userService.updateUserPassword(id, hashedPassword);
+    }
 
-    //         // if media is present then add media
-    //         if(media) taskUpdatedata.media = `${media.destination}/${media.filename}`;
-    //         return this.userService.updateTask(taskUpdatedata);
-
-    //     } else {
-    //         throw new BadRequestException(ErrorConstants.UPDATE_TASK_ID_REQ);
-    //     }
-    // }
-
-    @Delete('delete/:id')
+    @Delete('delete/:id/info')
+    @UseGuards(JwtAuthGuard)
+    @UsePipes(ValidationPipe)
+    deleteUserInfo(@Param('id') id:string, @Body() deleteData: any) {   
+        return this.userService.deleteUserInfo(id, deleteData);
+    }
+    
+    @Delete('delete/:id')    
     deleteUserProfile(@Param('id') id:string) {   
         return this.userService.deleteUserById(id);        
-    }
+    }    
 }

@@ -4,6 +4,7 @@ import { Model } from 'mongoose';
 
 import { User } from './user.model';
 import { ErrorConstants } from '../constants/error.constant';
+import { AppConst } from '../constants/app.constant'
 
 @Injectable()
 export class UserService {
@@ -75,19 +76,27 @@ export class UserService {
         return result;
     }
 
-    async updateUserDetails(updatedUserInfo: any): Promise<User> {
+    async deleteUserInfo(id: string, deleteData: any): Promise<any> {
+        const currentUserData = await this.findUser(id);
+        if (currentUserData) {
+            if(deleteData?.deleteField && AppConst.DELETE_ALLOWED_ON.includes(deleteData.deleteField)) {
+                let fieldToDelete = deleteData.deleteField;                
+                const updatedUserData = await this.userModel.updateOne({_id: id}, { $unset: { [deleteData.deleteField]: 1 } }).exec();
+                return updatedUserData;
+            } else {
+                throw new NotFoundException(ErrorConstants.DELETE_NOT_ALLOWED);
+            }
+        } else {
+            throw new NotFoundException(ErrorConstants.NO_USER_ID_FOUND);
+        }
+    }
+
+    async updateUserPassword(id: string, updatedUserInfo: string): Promise<User> {
         // Check if User by ID already exist
-        const userUpdateData = await this.findUser(updatedUserInfo.id);
+        const userUpdateData = await this.findUser(id);
 
         // Update user info
-        if(updatedUserInfo.firstName) userUpdateData.firstName = updatedUserInfo.firstName;
-        if(updatedUserInfo.lastName) userUpdateData.lastName = updatedUserInfo.lastName;
-        if(updatedUserInfo.email) userUpdateData.email = updatedUserInfo.email;
-        if(updatedUserInfo.phoneNumber) userUpdateData.phoneNumber = updatedUserInfo.phoneNumber;
-        if(updatedUserInfo.dob) userUpdateData.dob = updatedUserInfo.dob;
-        if(updatedUserInfo.password) userUpdateData.password = updatedUserInfo.password;
-        if(updatedUserInfo.isActive) userUpdateData.isActive = updatedUserInfo.isActive;
-
+        if(updatedUserInfo) userUpdateData.password = updatedUserInfo;
         const result = await userUpdateData.save();
         return result;
     }
