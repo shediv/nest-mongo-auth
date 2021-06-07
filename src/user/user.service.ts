@@ -19,7 +19,7 @@ export class UserService {
     private async findUser(id: string): Promise<User> {
         let userInfo;
         try {
-            userInfo = await this.userModel.findOne({_id: id }).exec();
+            userInfo = await this.userModel.findOne({_id: id }, { password: 0, isActive: 0 }).exec();
         } catch (error) {
           throw new NotFoundException(ErrorConstants.NO_USER_FOUND);
         }

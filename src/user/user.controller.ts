@@ -61,7 +61,7 @@ export class UserController {
             email: addUserData.email,
             phoneNumber: addUserData.phoneNumber,
             dob: addUserData.dob,
-            picture: `${picture.destination}/${picture.filename}`,
+            picture: `${picture.filename}`,
             password: hashedPassword
         };
         return this.userService.signUp(userInfo);
