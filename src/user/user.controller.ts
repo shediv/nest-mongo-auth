@@ -96,7 +96,7 @@ export class UserController {
     @UseGuards(JwtAuthGuard)
     @UsePipes(ValidationPipe)
     async updateTask(@Param('id') id: string, @Body() newPassword: any) {
-        const hashedPassword = await Hash(newPassword.passsword);
+        const hashedPassword = await Hash(newPassword.password);
         return this.userService.updateUserPassword(id, hashedPassword);
     }
 
